@@ -15,7 +15,7 @@ export default function App() {
     setErro(null)
     try {
       const res = await fetch(`${API_BASE}?_limit=10`)
-      if (!res.ok) throw new Error('Error 500 :Erro ao buscar tarefas')
+      if (!res.ok) throw new Error('Error 404 :Erro ao buscar tarefas')
       const data = await res.json()
       setTarefas(data)
     } catch (err) {
@@ -30,7 +30,7 @@ export default function App() {
   async function criarTarefa(e) {
     e.preventDefault()
     setErro(null)
-    if (!form.titulo.trim()) return setErro('Erro 400 : Erro ao criar  ')
+    if (!form.titulo.trim()) return setErro('Erro 400 :Informe um título válido ')
 
     try {
       const res = await fetch(API_BASE, {
@@ -38,7 +38,7 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: form.titulo, completed: form.concluida })
       })
-      if (!res.ok) throw new Error('Erro 404: Informe um título válido')
+      if (!res.ok) throw new Error('Erro 404')
       const nova = await res.json()
       setTarefas(prev => [nova, ...prev])
       setForm({ id: null, titulo: '', concluida: false })
@@ -49,7 +49,7 @@ export default function App() {
   async function atualizarTarefa(e) {
     e.preventDefault()
     setErro(null)
-    if (!form.titulo.trim()) return setErro('Erro 400 :Erro ao atualizar tarefa ')
+    if (!form.titulo.trim()) return setErro('Erro 400 : Error ao atualizar, título inválido ')
 
     try {
       const res = await fetch(`${API_BASE}/${form.id}`, {
@@ -77,7 +77,7 @@ export default function App() {
     if (!confirm('Deseja realmente excluir esta tarefa?')) return
     try {
       const res = await fetch(`${API_BASE}/${id}`, { method: 'DELETE' })
-      if (!res.ok) throw new Error('error 404 :Erro ao excluir tarefa')
+      if (!res.ok) throw new Error('error 404: Erro ao deletar tarefa')
       setTarefas(prev => prev.filter(t => t.id !== id))
     } catch (err) {
       setErro(err.message)
